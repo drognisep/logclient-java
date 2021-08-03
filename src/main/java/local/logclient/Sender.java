@@ -31,6 +31,13 @@ public class Sender {
 
     public void connect() throws IOException {
         this.socket = new Socket(serverAddress, port);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                socket.close();
+            } catch (Exception any) {
+                System.out.println("Failed to close socket");
+            }
+        }));
         this.out = new PrintWriter(this.socket.getOutputStream(), true);
         this.out.print("{\"major\":1}\n");
         this.out.flush();
