@@ -1,11 +1,10 @@
 package local.logclient;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static java.lang.String.format;
 
 public class LogClient {
     private static final String DEFAULT_HOST = "localhost";
@@ -39,6 +38,14 @@ public class LogClient {
         LogEntry entry = new LogEntry(serviceName, "ERROR", message);
         System.err.println(entry);
         send(entry);
+    }
+
+    public void error(Throwable t) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        pw.println(t.getMessage());
+        t.printStackTrace(pw);
+        error(sw.toString());
     }
 
     private void send(LogEntry entry) {

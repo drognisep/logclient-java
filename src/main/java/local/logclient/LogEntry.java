@@ -36,12 +36,12 @@ public class LogEntry {
     }
 
     public void setMessage(String message) {
-        message = message.trim().replace("\"", "\\\"").replace("\r\n", "\n").replace("\n", "\\n");
         this.message = message;
     }
 
     public String toJson() {
-        return format("{\"serviceName\":\"%s\",\"level\":\"%s\",\"message\":\"%s\"}", serviceName, level, message);
+        String msg = message.trim().replace("\"", "\\\"").replace("\r\n", "\n").replace("\r", "\n").replace("\n", "\\n").replace("\t", "\\t");
+        return format("{\"serviceName\":\"%s\",\"level\":\"%s\",\"message\":\"%s\"}", serviceName, level, msg);
     }
 
     public String toString() {
