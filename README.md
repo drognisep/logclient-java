@@ -56,6 +56,9 @@ A `LogClient` is initialized with a host, port number, and serviceName.
 ## Methods of Operation
 There are two different ways that the client can be used, depending on how much you want to disturb the code.
 
+Regardless which you use, it's recommended to minimize the number of `LogClient` instances you create, as each one will
+create a socket connection to the log server.
+
 ### Static logging
 The easiest way to use this is to use the static `LogClient` methods. However, it's best if the client instance is initialized early in the application, as late initialization can lead to significant overhead.
 

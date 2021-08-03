@@ -60,20 +60,28 @@ public class LogClient {
     private static final Map<String, LogClient> logCache = new ConcurrentHashMap<>();
 
     public static void logInfo(String serviceName, String message) {
-        LogClient client = logCache.get(serviceName);
-        if(client == null) {
-            client = new LogClient(serviceName);
-            logCache.put(serviceName, client);
-        }
-        client.info(message);
+        getClient(serviceName).info(message);
     }
 
     public static void logError(String serviceName, String message) {
+        getClient(serviceName).error(message);
+    }
+
+    public static void logError(String serviceName, Throwable exception) {
+        getClient(serviceName).error(exception);
+    }
+
+    private static LogClient getClient(String serviceName) {
         LogClient client = logCache.get(serviceName);
-        if(client == null) {
-            client = new LogClient(serviceName);
-            logCache.put(serviceName, client);
+        if (client == null) {
+            synchronized (logCache) {
+                client = logCache.get(serviceName);
+                if(client == null) {
+                    client = new LogClient(serviceName);
+                    logCache.put(serviceName, client);
+                }
+            }
         }
-        client.error(message);
+        return client;
     }
 }
