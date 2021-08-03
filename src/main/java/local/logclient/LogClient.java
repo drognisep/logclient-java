@@ -30,27 +30,27 @@ public class LogClient {
     }
 
     public void info(String message) {
-        String msg = format("[%s] INFO: %s", serviceName, message);
-        System.out.println(msg);
-        send(msg);
+        LogEntry entry = new LogEntry(serviceName, "INFO", message);
+        System.out.println(entry);
+        send(entry);
     }
 
     public void error(String message) {
-        String msg = format("[%s] ERROR: %s", serviceName, message);
-        System.err.println(msg);
-        send(msg);
+        LogEntry entry = new LogEntry(serviceName, "ERROR", message);
+        System.err.println(entry);
+        send(entry);
     }
 
-    private void send(String message) {
+    private void send(LogEntry entry) {
         try {
-            this.sender.send(message);
+            this.sender.send(entry.toJson());
         } catch(IOException iox) {
             System.err.printf("Failed to write remotely: %s%n", iox.getMessage());
             iox.printStackTrace(System.err);
         }
     }
 
-    private static Map<String, LogClient> logCache = new ConcurrentHashMap<>();
+    private static final Map<String, LogClient> logCache = new ConcurrentHashMap<>();
 
     public static void logInfo(String serviceName, String message) {
         LogClient client = logCache.get(serviceName);
