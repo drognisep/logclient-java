@@ -91,7 +91,8 @@ public class SomeJavaClass {
         try {
             /* ... */
         } catch(Exception ex) {
-            this.client.error("Uh-oh! An exception happened! " + ex.getMessage());
+            this.client.error("Uh-oh! An exception happened!");
+            this.client.error(ex);
         }
     }
 }
